@@ -19,7 +19,6 @@ API RESTful para gerenciamento de clientes, construída em Express.js com TypeSc
 │   │   │   └── tests            # testes de integração do controller
 │   │   ├── middlewares
 │   │   │   ├── validation.ts
-│   │   │   └── errorHandler.ts
 │   │   └── consumers
 │   │       └── clientCreatedConsumer.ts
 │   ├── domain

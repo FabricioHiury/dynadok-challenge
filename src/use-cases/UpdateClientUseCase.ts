@@ -1,35 +1,60 @@
-import { Client } from "@/domain/entities/Client";
-import { ClientRepository } from "@/domain/repositories/ClientRepository";
-import { Either, left, right } from "@/shared/either";
+import { Client } from '@/domain/entities/Client'
+import { ClientRepository } from '@/domain/repositories/ClientRepository'
+import { Either, left, right } from '@/shared/either'
 
 export interface UpdateClientDTO {
-  name?: string;
-  email?: string;
-  phone?: string;
+  name?: string
+  email?: string
+  phone?: string
 }
 
 export class UpdateClientUseCase {
   constructor(private clientRepository: ClientRepository) {}
 
-  async execute(id: string, data: UpdateClientDTO): Promise<Either<string, Client>> {
+  async execute(
+    id: string,
+    data: UpdateClientDTO,
+  ): Promise<Either<string, Client>> {
     try {
       if (!id || id.trim().length === 0) {
-        return left("ID é obrigatório");
+        return left('ID é obrigatório')
       }
 
-      if (data.email && !data.email.includes("@")) {
-        return left("Email inválido");
+      if (data.email && !data.email.includes('@')) {
+        return left('Email inválido')
       }
 
-      const existing = await this.clientRepository.findById(id);
+      const existing = await this.clientRepository.findById(id)
       if (!existing) {
-        return left(`Cliente com id ${id} não encontrado`);
+        return left(`Cliente com id ${id} não encontrado`)
       }
-      
-      const updatedClient = await this.clientRepository.update(id, data);
-      return right(updatedClient);
+
+      if (data.email) {
+        const existingEmail = await this.clientRepository.findByEmail(
+          data.email,
+        )
+        if (existingEmail && existingEmail.id !== id) {
+          return left('Email já cadastrado')
+        }
+      }
+
+      if (data.phone) {
+        const existingPhone = await this.clientRepository.findByPhone(
+          data.phone,
+        )
+        if (existingPhone && existingPhone.id !== id) {
+          return left('Telefone já cadastrado')
+        }
+      }
+
+      const updatedClient = await this.clientRepository.update(id, data)
+      return right(updatedClient)
     } catch (error) {
-      return left(`Erro ao atualizar cliente: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+      return left(
+        `Erro ao atualizar cliente: ${
+          error instanceof Error ? error.message : 'Erro desconhecido'
+        }`,
+      )
     }
   }
 }
