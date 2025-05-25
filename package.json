@@ -1,0 +1,56 @@
+{
+  "name": "dynadok-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/server.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FabricioHiury/dynadok-challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FabricioHiury/dynadok-challenge/issues"
+  },
+  "homepage": "https://github.com/FabricioHiury/dynadok-challenge#readme",
+  "dependencies": {
+    "amqplib": "^0.10.8",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "ioredis": "^5.6.1",
+    "mongoose": "^8.15.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.27.0",
+    "@faker-js/faker": "^9.8.0",
+    "@rocketseat/eslint-config": "^2.2.2",
+    "@types/amqplib": "^0.10.7",
+    "@types/express": "^5.0.2",
+    "@types/faker": "^6.6.8",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0"
+  }
+}
