@@ -3,6 +3,13 @@ import { CreateClientDTO, CreateClientUseCase } from "../CreateClientUseCase";
 import { faker } from '@faker-js/faker/locale/pt_BR'; 
 import { ClientFactory } from "@/tests/factories/ClientFactory";
 
+jest.mock('@/infrastructure/messaging/rabbitmq', () => ({
+  getChannel: jest.fn().mockResolvedValue({
+    assertQueue: jest.fn().mockResolvedValue(undefined),
+    sendToQueue: jest.fn().mockReturnValue(undefined),
+  }),
+}));
+
 const mockClientRepository: jest.Mocked<ClientRepository> = {
   create: jest.fn(),
   update: jest.fn(),
