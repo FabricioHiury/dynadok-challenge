@@ -62,7 +62,7 @@ describe('ListClientsUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe('Erro ao listar clientes: Database error')
+      expect(result.value).toBe('Error to list clients: Database error')
     }
   })
 })

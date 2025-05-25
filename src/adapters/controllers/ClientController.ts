@@ -24,6 +24,7 @@ export class ClientController {
 
     if (result.isLeft()) {
       res.status(400).json({ error: result.value })
+      return
     }
 
     res.status(201).json(result.value)
@@ -34,10 +35,12 @@ export class ClientController {
 
     if (result.isLeft()) {
       const errorMessage = result.value
-      if (errorMessage.includes('não encontrado')) {
+      if (errorMessage.includes('not found')) {
         res.status(404).json({ error: errorMessage })
+        return
       }
       res.status(400).json({ error: errorMessage })
+      return
     }
 
     res.json(result.value)
@@ -48,10 +51,12 @@ export class ClientController {
 
     if (result.isLeft()) {
       const errorMessage = result.value
-      if (errorMessage.includes('não encontrado')) {
+      if (errorMessage.includes('not found')) {
         res.status(404).json({ error: errorMessage })
+        return
       }
       res.status(400).json({ error: errorMessage })
+      return
     }
 
     res.json(result.value)

@@ -22,7 +22,7 @@ export class FindClientByIdUseCase {
   async execute(id: string): Promise<Either<string, Client>> {
     try {
       if (!id || id.trim().length === 0) {
-        return left('ID é obrigatório')
+        return left('ID is required')
       }
 
       const cacheKey = `client:${id}`
@@ -34,7 +34,7 @@ export class FindClientByIdUseCase {
 
       const client = await this.clientRepository.findById(id)
       if (!client) {
-        return left(`Cliente com id ${id} não encontrado`)
+        return left(`Client with id ${id} not found`)
       }
 
       await redisClient.set(
@@ -47,8 +47,8 @@ export class FindClientByIdUseCase {
       return right(client)
     } catch (error) {
       return left(
-        `Erro ao buscar cliente: ${
-          error instanceof Error ? error.message : 'Erro desconhecido'
+        `Error to find client: ${
+          error instanceof Error ? error.message : 'Error'
         }`,
       )
     }

@@ -15,22 +15,22 @@ export class CreateClientUseCase {
   async execute(data: CreateClientDTO): Promise<Either<string, Client>> {
     try {
       if (!data.name || data.name.trim().length === 0) {
-        return left('Nome é obrigatório')
+        return left('Name is required')
       }
 
       if (!data.email || !data.email.includes('@')) {
-        return left('Email inválido')
+        return left('Invalid email')
       }
 
       if (!data.phone || data.phone.trim().length === 0) {
-        return left('Telefone é obrigatório')
+        return left('Phone is required')
       }
 
       const existingEmail = await this.clientRepository.findByEmail(data.email)
-      if (existingEmail) return left('Email já cadastrado')
+      if (existingEmail) return left('Email already in use')
 
       const existingPhone = await this.clientRepository.findByPhone(data.phone)
-      if (existingPhone) return left('Telefone já cadastrado')
+      if (existingPhone) return left('Phone already in use')
 
       const client = new Client()
       client.name = data.name
@@ -47,8 +47,8 @@ export class CreateClientUseCase {
       return right(createdClient)
     } catch (error) {
       return left(
-        `Erro ao criar cliente: ${
-          error instanceof Error ? error.message : 'Erro desconhecido'
+        `Error to create client: ${
+          error instanceof Error ? error.message : 'Error'
         }`,
       )
     }

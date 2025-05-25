@@ -5,7 +5,7 @@ export async function startClientCreatedConsumer() {
   const queue = 'client.created'
 
   await channel.assertQueue(queue, { durable: true })
-  console.log(`Listening for messages on ${queue}…`)
+  console.log(`Listening for messages on ${queue}`)
 
   channel.consume(
     queue,

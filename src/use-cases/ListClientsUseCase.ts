@@ -36,8 +36,8 @@ export class ListClientsUseCase {
       return right(clients)
     } catch (error) {
       return left(
-        `Erro ao listar clientes: ${
-          error instanceof Error ? error.message : 'Erro desconhecido'
+        `Error to list clients: ${
+          error instanceof Error ? error.message : 'Error'
         }`,
       )
     }

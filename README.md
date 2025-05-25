@@ -69,9 +69,10 @@ API RESTful para gerenciamento de clientes, construída em Express.js com TypeSc
    NODE_ENV=development
    PORT=3333
    MONGO_URI=mongodb://mongo:27017/dynadok
-   REDIS_HOST=redis
-   REDIS_PORT=6379
+   REDIS_URL=redis://redis:6379
    RABBITMQ_URL=amqp://rabbitmq
+   RABBITMQ_DEFAULT_USER=guest
+   RABBITMQ_DEFAULT_PASS=guest
    ```
 2. Garanta que Docker e Docker Compose estejam instalados.
 3. Na raiz do projeto, execute:
