@@ -4,123 +4,176 @@ API RESTful para gerenciamento de clientes, construída em Express.js com TypeSc
 
 ---
 
-## 📂 Arquitetura do Projeto
+## Estrutura do Projeto
 
-```text
-src/
-├── adapters/
-│   ├── controllers/      ↳ Controllers HTTP (Express)
-│   ├── middlewares/      ↳ Middlewares (validação, error handler)
-│   └── consumers/        ↳ Consumidores de mensagens (RabbitMQ)
-├── domain/
-│   ├── entities/         ↳ Entidades de domínio (Client)
-│   └── repositories/     ↳ Portas (interfaces) de repositório
-├── infrastructure/
-│   ├── cache/            ↳ Configuração do Redis (cache)
-│   ├── database/         ↳ Conexão com MongoDB
-│   ├── messaging/        ↳ Configuração do RabbitMQ
-│   └── repositories/     ↳ Implementações concretas de repositórios
-├── shared/
-│   ├── either.ts         ↳ Tipo `Either<L,R>` para fluxo funcional de erros
-│   ├── BaseEntity.ts     ↳ Classe base de entidade
-│   └── BaseRepository.ts ↳ Interface genérica de repositório
-├── use-cases/            ↳ Casos de uso (Application Layer)
-└── server.ts             ↳ Composition Root e bootstrap do Express
 ```
-
-Este layout separa claramente as camadas:
-
-* **Domain**: regras de negócio e entidades puras.
-* **Use-cases**: orquestração das operações, usando interfaces do domínio.
-* **Adapters**: convertem HTTP, mensageria e cache em chamadas aos use-cases.
-* **Infrastructure**: integrações com MongoDB, Redis e RabbitMQ.
+.
+├── .github
+│   └── workflows
+│       └── ci.yml               # CI/CD via GitHub Actions
+├── src
+│   ├── adapters
+│   │   ├── controllers
+│   │   │   ├── ClientController.ts
+│   │   │   ├── client.routes.ts
+│   │   │   └── tests            # testes de integração do controller
+│   │   ├── middlewares
+│   │   │   ├── validation.ts
+│   │   │   └── errorHandler.ts
+│   │   └── consumers
+│   │       └── clientCreatedConsumer.ts
+│   ├── domain
+│   │   ├── entities
+│   │   │   ├── Client.ts
+│   │   │   └── tests            # testes de entidade/domain
+│   │   └── repositories
+│   │       └── ClientRepository.ts
+│   ├── infrastructure
+│   │   ├── cache
+│   │   │   └── redis.ts
+│   │   ├── database
+│   │   │   └── mongo.ts
+│   │   ├── messaging
+│   │   │   └── rabbitmq.ts
+│   │   └── repositories
+│   │       └── MongoClientRepository.ts
+│   ├── shared
+│   │   ├── either.ts             # Tipo `Either<L,R>` para fluxo funcional de erros
+│   │   ├── BaseEntity.ts         # Classe base para entidades
+│   │   └── BaseRepository.ts     # Classe base para repositórios
+│   ├── use-cases
+│   │   ├── CreateClientUseCase.ts
+│   │   ├── FindClientByIdUseCase.ts
+│   │   ├── ListClientsUseCase.ts
+│   │   ├── UpdateClientUseCase.ts
+│   │   └── tests                # testes unitários dos use-cases
+│   └── server.ts                # Composition Root / bootstrap do Express
+├── .dockerignore
+├── .env                         # variáveis de ambiente
+├── .eslintrc.json
+├── .gitignore
+├── Dockerfile                   # multi-stage com pnpm & Alpine
+├── docker-compose.yml
+├── jest.config.ts
+├── package.json
+├── pnpm-lock.yaml
+├── README.md
+└── tsconfig.json
+```
 
 ---
 
-## 🚀 Levantar a aplicação com Docker
+## Subir tudo com Docker
 
-1. Garanta que você tenha o Docker e Docker Compose instalados.
-
-2. Copie o arquivo `.env.example` para `.env` e ajuste se necessário.
-
-3. Execute na raiz do projeto:
-
+1. **Crie** (ou renomeie) seu arquivo `.env` na raiz do projeto, copiando o modelo abaixo:
+   ```dotenv
+   NODE_ENV=development
+   PORT=3333
+   MONGO_URI=mongodb://mongo:27017/dynadok
+   REDIS_HOST=redis
+   REDIS_PORT=6379
+   RABBITMQ_URL=amqp://rabbitmq
+   ```
+2. Garanta que Docker e Docker Compose estejam instalados.
+3. Na raiz do projeto, execute:
    ```bash
    docker-compose up --build
    ```
-
-4. Serviços disponíveis:
-
-   * **API**      → `http://localhost:3333`
-   * **MongoDB**  → `mongodb://localhost:27017/dynadok`
-   * **Redis**    → `redis://localhost:6379`
-   * **RabbitMQ** → painel em `http://localhost:15672` (usuário `guest` / senha `guest`)
+4. Acesse:
+   - **API**        → `http://localhost:3333`
+   - **MongoDB**    → `mongodb://localhost:27017/dynadok`
+   - **Redis**      → `redis://localhost:6379`
+   - **RabbitMQ**   → painel em `http://localhost:15672` (usuário: `guest` / senha: `guest`)
 
 ---
 
-## 📦 Endpoints Disponíveis
+## Scripts de Desenvolvimento
+
+| Script           | Descrição                                  |
+|------------------|---------------------------------------------|
+| `pnpm install`   | Instala dependências                       |
+| `pnpm dev`       | Inicia em modo dev (ts-node-dev + watch)   |
+| `pnpm build`     | Transpila TypeScript para `dist/`          |
+| `pnpm start`     | Executa build em `dist/`                   |
+| `pnpm test`      | Roda testes via Jest                       |
+
+> Se você estiver usando npm, substitua `pnpm` por `npm` nos comandos acima.
+
+---
+
+## Endpoints Disponíveis
 
 Base URL: `http://localhost:3333/api/clients`
 
-| Método | Rota   | Descrição                  | Body / Params                                 |
-| :----: | :----- | :------------------------- | :-------------------------------------------- |
-|  POST  | `/`    | Cria um novo cliente       | JSON `{ name, email, phone }`                 |
-|   GET  | `/:id` | Busca cliente por ID       | Param `id` (24 caracteres)                    |
-|   GET  | `/`    | Lista todos os clientes    | —                                             |
-|   PUT  | `/:id` | Atualiza cliente existente | Param `id` + JSON `{ name?, email?, phone? }` |
+| Método | Rota    | Descrição                    | Body / Params                                 |
+|:------:|:--------|:-----------------------------|:-----------------------------------------------|
+| POST   | `/`     | Cria um novo cliente         | JSON `{ name, email, phone }`                  |
+| GET    | `/:id`  | Busca cliente por ID         | Param `id` (24 caracteres)                     |
+| GET    | `/`     | Lista todos os clientes      | —                                              |
+| PUT    | `/:id`  | Atualiza cliente existente   | Param `id` + JSON `{ name?, email?, phone? }` |
 
-### Exemplos
-
-* **Criar cliente**:
-
-  ```bash
-  curl -X POST http://localhost:3333/api/clients \
-    -H "Content-Type: application/json" \
-    -d '{ "name": "Fulano Silva", "email": "fulano@example.com", "phone": "11999999999" }'
-  ```
-
-* **Buscar por ID**:
-
-  ```bash
-  curl http://localhost:3333/api/clients/650a9f1f2b8b7b00123abcde
-  ```
-
-* **Listar todos**:
-
-  ```bash
-  curl http://localhost:3333/api/clients
-  ```
-
-* **Atualizar**:
-
-  ```bash
-  curl -X PUT http://localhost:3333/api/clients/650a9f1f2b8b7b00123abcde \
-    -H "Content-Type: application/json" \
-    -d '{ "email": "novo@example.com" }'
-  ```
-
----
-
-## 🧪 Executar Testes
+### Exemplos `curl`
 
 ```bash
-# Instale as dependências (usando npm ou pnpm)
-npm install      # ou pnpm install
+# Criar cliente
+curl -X POST http://localhost:3333/api/clients   -H "Content-Type: application/json"   -d '{ "name": "Fulano Silva", "email": "fulano@example.com", "phone": "11999999999" }'
 
-# Execute a suíte de testes
-npm test         # ou pnpm test
+# Buscar por ID
+curl http://localhost:3333/api/clients/650a9f1f2b8b7b00123abcde
 
-# Relatório de cobertura
-npm run coverage # se configurado no package.json
+# Listar todos
+curl http://localhost:3333/api/clients
+
+# Atualizar
+curl -X PUT http://localhost:3333/api/clients/650a9f1f2b8b7b00123abcde   -H "Content-Type: application/json"   -d '{ "email": "novo@example.com" }'
 ```
-
-Todos os testes unitários para use-cases, entitidades e middlewares estão em `src/.../__tests__/`.
 
 ---
 
-## 🔧 Observações
+## Testes
 
-* A cada criação de cliente, um evento é publicado na fila `client.created` do RabbitMQ;
-  um consumer dedicado (`src/adapters/consumers/clientCreatedConsumer.ts`) consome e faz log.
-* Redis é usado para cache em `FindClientByIdUseCase` e `ListClientsUseCase`, com TTL configurável.
-* A aplicação segue Clean Architecture/DDD, facilitando escalabilidade e testes isolados.
+- Se ainda não instalou as dependências:
+  ```bash
+  pnpm install
+  ```
+- Execute:
+  ```bash
+  pnpm test
+  ```
+- Para gerar cobertura:
+  ```bash
+  pnpm test -- --coverage
+  ```
+
+Os testes unitários estão em `src/use-cases/tests`, `src/adapters/controllers/tests` e `src/domain/entities/tests`.
+
+---
+
+## CI/CD
+
+O pipeline de CI está em `.github/workflows/ci.yml`, que:
+
+1. Faz checkout do código.  
+2. Habilita Corepack & `pnpm`.  
+3. Instala dependências (`pnpm install --frozen-lockfile`).  
+4. Roda linter, build e testes.  
+5. Publica `dist/` como artefato.
+
+---
+
+## Arquitetura em Camadas
+
+1. **Domain**:  
+   - Entidades puras e interfaces de repositório.  
+2. **Use-cases (Application)**:  
+   - Orquestram a lógica de negócio via portas (interfaces).  
+3. **Adapters**:  
+   - **Controllers**: convertem HTTP → use-cases.  
+   - **Middlewares**: validação (`validation.ts`) e tratamento de erros (`errorHandler.ts`).  
+   - **Consumers**: processam eventos RabbitMQ.  
+4. **Infrastructure**:  
+   - **MongoDB** (`mongo.ts`) e repositório concreto (`MongoClientRepository.ts`).  
+   - **Redis** (`redis.ts`) para cache em consultas.  
+   - **RabbitMQ** (`rabbitmq.ts`) para mensageria.  
+5. **Composition Root** (`server.ts`):  
+   - Monta todas as dependências e inicializa o Express.
