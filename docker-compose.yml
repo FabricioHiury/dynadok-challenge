@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: dynadok_app
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      NODE_ENV:        ${NODE_ENV}
+      PORT:            ${PORT}
+      MONGO_URI:       ${MONGO_URI}
+      REDIS_URL:       ${REDIS_URL}
+      RABBITMQ_URL:    ${RABBITMQ_URL}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    depends_on:
+      - mongo
+      - redis
+      - rabbitmq
+
+  mongo:
+    image: mongo:6.0
+    container_name: dynadok_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: dynadok_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: dynadok_rabbitmq
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+
+volumes:
+  mongo_data:
+  redis_data:
