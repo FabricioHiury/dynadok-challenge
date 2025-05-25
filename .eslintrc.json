@@ -3,5 +3,13 @@
   "rules": {
     "no-useless-constructor": "off",
     "no-new": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.spec.ts", "src/**/tests/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
 }

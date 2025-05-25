@@ -1,55 +1,55 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express'
 
 export function validateCreateClient(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
-  const { name, email, phone } = req.body;
+  const { name, email, phone } = req.body
 
   if (!name || !email || !phone) {
     res.status(400).json({
-      error: "Missing required fields: name, email, phone",
-    });
-    return;
+      error: 'Missing required fields: name, email, phone',
+    })
+    return
   }
 
-  if (!email.includes("@")) {
+  if (!email.includes('@')) {
     res.status(400).json({
-      error: "Invalid email format",
-    });
-    return;
+      error: 'Invalid email format',
+    })
+    return
   }
 
-  next();
+  next()
 }
 
 export function validateUpdateClient(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
-  const { email } = req.body;
+  const { email } = req.body
 
-  if (email && !email.includes("@")) {
-    res.status(400).json({ error: "Invalid email format" });
-    return;
+  if (email && !email.includes('@')) {
+    res.status(400).json({ error: 'Invalid email format' })
+    return
   }
 
-  next();
+  next()
 }
 
 export function validateId(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
-  const { id } = req.params;
+  const { id } = req.params
 
   if (!id || id.length !== 24) {
-    res.status(400).json({ error: "Invalid ID format" });
-    return;
+    res.status(400).json({ error: 'Invalid ID format' })
+    return
   }
 
-  next();
+  next()
 }
