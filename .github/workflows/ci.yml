@@ -39,7 +39,7 @@ jobs:
         run: pnpm test
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: dist
           path: dist/
