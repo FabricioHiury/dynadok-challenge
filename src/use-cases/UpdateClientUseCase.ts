@@ -17,16 +17,16 @@ export class UpdateClientUseCase {
   ): Promise<Either<string, Client>> {
     try {
       if (!id || id.trim().length === 0) {
-        return left('ID é obrigatório')
+        return left('ID is required')
       }
 
       if (data.email && !data.email.includes('@')) {
-        return left('Email inválido')
+        return left('Invalid email')
       }
 
       const existing = await this.clientRepository.findById(id)
       if (!existing) {
-        return left(`Cliente com id ${id} não encontrado`)
+        return left(`Client with id ${id} not found`)
       }
 
       if (data.email) {
@@ -34,7 +34,7 @@ export class UpdateClientUseCase {
           data.email,
         )
         if (existingEmail && existingEmail.id !== id) {
-          return left('Email já cadastrado')
+          return left('Email already in use')
         }
       }
 
@@ -43,7 +43,7 @@ export class UpdateClientUseCase {
           data.phone,
         )
         if (existingPhone && existingPhone.id !== id) {
-          return left('Telefone já cadastrado')
+          return left('Phone already in use')
         }
       }
 
@@ -51,8 +51,8 @@ export class UpdateClientUseCase {
       return right(updatedClient)
     } catch (error) {
       return left(
-        `Erro ao atualizar cliente: ${
-          error instanceof Error ? error.message : 'Erro desconhecido'
+        `Error to update client: ${
+          error instanceof Error ? error.message : 'Error'
         }`,
       )
     }

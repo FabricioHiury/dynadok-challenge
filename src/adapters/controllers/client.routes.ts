@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import asyncHandler from 'express-async-handler'
 import { ClientController } from './ClientController'
 import {
   validateCreateClient,
@@ -9,18 +10,28 @@ import {
 const ClientRoutes = Router()
 const clientController = new ClientController()
 
-ClientRoutes.post('/', validateCreateClient, (req, res) =>
-  clientController.create(req, res),
+ClientRoutes.post(
+  '/',
+  validateCreateClient,
+  asyncHandler(clientController.create.bind(clientController)),
 )
 
-ClientRoutes.put('/:id', validateId, validateUpdateClient, (req, res) =>
-  clientController.update(req, res),
+ClientRoutes.put(
+  '/:id',
+  validateId,
+  validateUpdateClient,
+  asyncHandler(clientController.update.bind(clientController)),
 )
 
-ClientRoutes.get('/:id', validateId, (req, res) =>
-  clientController.findById(req, res),
+ClientRoutes.get(
+  '/:id',
+  validateId,
+  asyncHandler(clientController.findById.bind(clientController)),
 )
 
-ClientRoutes.get('/', (req, res) => clientController.findAll(req, res))
+ClientRoutes.get(
+  '/',
+  asyncHandler(clientController.findAll.bind(clientController)),
+)
 
 export default ClientRoutes

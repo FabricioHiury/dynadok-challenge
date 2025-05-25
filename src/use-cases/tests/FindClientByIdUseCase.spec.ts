@@ -50,7 +50,7 @@ describe('FindClientByIdUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe(`Cliente com id ${missingId} não encontrado`)
+      expect(result.value).toBe(`Client with id ${missingId} not found`)
     }
   })
 
@@ -59,7 +59,7 @@ describe('FindClientByIdUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe('ID é obrigatório')
+      expect(result.value).toBe('ID is required')
     }
     expect(mockClientRepository.findById).not.toHaveBeenCalled()
   })
@@ -71,7 +71,7 @@ describe('FindClientByIdUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe('Erro ao buscar cliente: Database error')
+      expect(result.value).toBe('Error to find client: Database error')
     }
   })
 })

@@ -53,7 +53,7 @@ describe('CreateClientUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe('Nome é obrigatório')
+      expect(result.value).toBe('Name is required')
     }
     expect(mockClientRepository.create).not.toHaveBeenCalled()
   })
@@ -69,7 +69,7 @@ describe('CreateClientUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe('Email inválido')
+      expect(result.value).toBe('Invalid email')
     }
     expect(mockClientRepository.create).not.toHaveBeenCalled()
   })
@@ -85,7 +85,7 @@ describe('CreateClientUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe('Telefone é obrigatório')
+      expect(result.value).toBe('Phone is required')
     }
     expect(mockClientRepository.create).not.toHaveBeenCalled()
   })
@@ -103,7 +103,7 @@ describe('CreateClientUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBe('Erro ao criar cliente: Database error')
+      expect(result.value).toBe('Error to create client: Database error')
     }
   })
 })

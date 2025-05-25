@@ -27,6 +27,7 @@
   "dependencies": {
     "amqplib": "^0.10.8",
     "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
     "ioredis": "^5.6.1",
     "mongoose": "^8.15.0",
     "ts-node-dev": "^2.0.0",

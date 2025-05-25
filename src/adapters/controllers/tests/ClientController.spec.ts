@@ -98,7 +98,7 @@ describe('ClientController', () => {
         phone: '11999999999',
       }
       mockCreateClientUseCase.execute.mockResolvedValue(
-        left('Nome é obrigatório'),
+        left('Name is required'),
       )
 
       await clientController.create(
@@ -108,7 +108,7 @@ describe('ClientController', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Nome é obrigatório',
+        error: 'Name is required',
       })
     })
   })
@@ -133,7 +133,7 @@ describe('ClientController', () => {
     it('should return 404 when client is not found', async () => {
       mockRequest.params = { id: '999' }
       mockFindClientByIdUseCase.execute.mockResolvedValue(
-        left('Cliente não encontrado'),
+        left('Client not found'),
       )
 
       await clientController.findById(
@@ -143,7 +143,7 @@ describe('ClientController', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(404)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Cliente não encontrado',
+        error: 'Client not found',
       })
     })
   })
@@ -177,7 +177,7 @@ describe('ClientController', () => {
 
     it('should handle errors when listing clients', async () => {
       mockListClientsUseCase.execute.mockResolvedValue(
-        left('Erro ao listar clientes'),
+        left('Error to list clients'),
       )
 
       await clientController.findAll(
@@ -187,7 +187,7 @@ describe('ClientController', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400)
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Erro ao listar clientes',
+        error: 'Error to list clients',
       })
     })
   })
