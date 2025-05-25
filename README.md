@@ -142,7 +142,7 @@ curl -X PUT http://localhost:3333/api/clients/650a9f1f2b8b7b00123abcde   -H "Con
   ```
 - Para gerar cobertura:
   ```bash
-  pnpm test -- --coverage
+  pnpm test:coverage
   ```
 
 Os testes unitários estão em `src/use-cases/tests`, `src/adapters/controllers/tests` e `src/domain/entities/tests`.
